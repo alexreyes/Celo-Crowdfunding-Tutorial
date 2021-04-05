@@ -6,7 +6,7 @@ The usual way of doing this might involve Plaid (banking), Stripe (payments), a 
 
 ![infrastructure](https://i.imgur.com/3PqEjaF.png)
 
-Solidity and Celo make building the backend for this easy! Not to mention, global 🌎 from day one .
+Solidity and Celo make building the backend for this easy! Not to mention, 🌎 from day one .
 
 # Prerequisites
 
@@ -284,11 +284,9 @@ This function is pretty simple. It returns the information about the project by 
 
 ## Back to the CeloCrowdfund contract
 
-![celo crowdfund contract back to the future](https://i.imgur.com/GAOnI9l.png)
+![Celo crowdfund contract back to the future image](https://i.imgur.com/UFqJB0z.png)
 
-Wow, that title is a mouthful. 
-
-Anyways, it's time to get back to the ``CeloCrowdfund`` contract now that we've finished the ``Project`` contract. 
+It's time to get back to the ``CeloCrowdfund`` contract, now that we've finished the ``Project`` contract. 
 
 We'll start by adding an ``event`` for when a project is started: 
 
@@ -352,9 +350,9 @@ And that's it for our two contracts!
 
 # Conclusion 
 
-Just like that, we've created a smart contract which will allow for crowdfunding in Celo. The full source code is available [here](https://github.com/alexreyes/Celo-Crowdfunding-Tutorial).
+Just like that, we've created a smart contract which will allow for crowdfunding in Celo. The full source code is available on Github [here](https://github.com/alexreyes/Celo-Crowdfunding-Tutorial).
 
-Hopefully creating this smart contract has given you a sense of what's possible. Without using any real external infrastructure aside from Solidity and the Celo network, we're able to accept payments and help users coordinate towards raising money for a project they want.  
+Hopefully creating this smart contract has given you a sense of what's possible. Without too much hassle and infrastructure, we're able to accept payments and help users coordinate towards raising money for a project they want to support.
 
 In the next tutorial, we will discuss deploying the contracts to the Celo network!
 
