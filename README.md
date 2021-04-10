@@ -1,6 +1,6 @@
 # 1. Building a Crowdfunding Smart Contract in Celo
 
-We're going to write a smart contract in Solidity which facilitates crowdfunding (like GoFundMe, Kickstarter, and Indiegogo) on Celo in around 162 lines of code. 
+We're going to write a smart contract in Solidity which facilitates crowdfunding (like GoFundMe, Kickstarter, and Indiegogo) on Celo in 172 lines of code. 
 
 Our contract will be able to create fundraisers, let people donate to them, and pay out the money raised to the project creator. And it will do this all in cUSD (the Celo stablecoin).
 
@@ -135,7 +135,7 @@ contract Project {
   // Initialize state at fundraising
   ProjectState public state = ProjectState.Fundraising;  
 	
-  mapping (address => int) public contributions;
+  mapping (address => uint) public contributions;
 }
 ```
 **Note**: Since these variables are all ``public``, they can be accessed by any Solidity contract or dApp. 
@@ -196,7 +196,7 @@ function contribute(uint256 amount) external theState(ProjectState.Fundraising) 
   currentBalance = currentBalance.add(amount);
   emit ReceivedFunding(msg.sender, amount, currentBalance);
   
-  checkIfFundingCompleteOrExpired();
+  checkIfFundingExpired();
 }
 ```
 The ``contribute()`` function is an external function. This means it can only be called from other smart contracts or transactions. 

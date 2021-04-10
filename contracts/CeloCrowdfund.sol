@@ -1,160 +1,172 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
 // Importing OpenZeppelin's SafeMath Implementation
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+// IERC-20 contract 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 contract CeloCrowdfund {
   // SafeMath for safe integer operations
-  using SafeMath for uint256; 
+  using SafeMath for uint256;
 
   // List of all the projects
-  Project[] private projects; 
-
+  Project[] private projects;
+	
   // event for when new project starts
   event ProjectStarted(
     address contractAddress,
     address projectCreator,
     string title,
-    string description, 
-    string imageLink,  
+    string description,
+    string imageLink,
     uint256 fundRaisingDeadline,
     uint256 goalAmount
-  ); 
+  );
 
   function startProject(
-    string calldata title,
+    IERC20 cUSDToken,
+    string calldata title, 
     string calldata description,
-    string calldata imageLink, 
-    uint durationInDays, 
+    string calldata imageLink,
+    uint durationInDays,
     uint amountToRaise
   ) external {
-    uint raiseUntil = block.timestamp.add(durationInDays.mul(1 days)); 
+    uint raiseUntil = block.timestamp.add(durationInDays.mul(1 days));
     
-    Project newProject = new Project (payable(msg.sender), title, description, imageLink, raiseUntil, amountToRaise); 
-    projects.push(newProject); 
+    Project newProject = new Project(cUSDToken, payable(msg.sender), title, description, imageLink, raiseUntil, amountToRaise);
+    projects.push(newProject);
     
     emit ProjectStarted(
       address(newProject),
-      msg.sender, 
+      msg.sender,
       title,
-      description, 
-      imageLink, 
-      raiseUntil, 
+      description,
+      imageLink,
+      raiseUntil,
       amountToRaise
     );
   }
 
   function returnProjects() external view returns(Project[] memory) {
-    return projects; 
+    return projects;
   }
+
 }
 
-contract Project {
-  using SafeMath for uint256; 
 
+contract Project {
+  using SafeMath for uint256;
+  
   enum ProjectState {
-    Fundraising, 
-    Expired, 
+    Fundraising,
+    Expired,
     Successful
   }
-
+  IERC20 private cUSDToken;
+  
   // Initialize public variables
-  address payable public creator; 
-  uint public goalAmount; 
-  uint public completeAt; 
-  uint256 public currentBalance; 
-  uint public raisingDeadline; 
+  address payable public creator;
+  uint public goalAmount;
+  uint public completeAt;
+  uint256 public currentBalance;
+  uint public raisingDeadline;
   string public title;
-  string public description; 
+  string public description;
   string public imageLink;
 
   // Initialize state at fundraising
-  ProjectState public state = ProjectState.Fundraising; 
+  ProjectState public state = ProjectState.Fundraising;  
+	
   mapping (address => uint) public contributions;
 
   // Event when funding is received
   event ReceivedFunding(address contributor, uint amount, uint currentTotal);
 
   // Event for when the project creator has received their funds
-  event CreatorPaid(address recipient); 
+  event CreatorPaid(address recipient);
 
   modifier theState(ProjectState _state) {
     require(state == _state);
-    _; 
+   _;
   }
 
   constructor
   (
-    address payable projectCreator, 
-    string memory projectTitle,
+    IERC20 token,
+    address payable projectCreator,
+    string memory projectTitle, 
     string memory projectDescription,
-    string memory projectImageLink, 
+    string memory projectImageLink,
     uint fundRaisingDeadline,
     uint projectGoalAmount
   ) {
-    creator = projectCreator; 
+    cUSDToken = token;
+    creator = projectCreator;
     title = projectTitle; 
-    description = projectDescription;
-    imageLink = projectImageLink;
+    description = projectDescription; 
+    imageLink = projectImageLink; 
     goalAmount = projectGoalAmount;
     raisingDeadline = fundRaisingDeadline;
-    currentBalance = 0; 
+    currentBalance = 0;
   }
 
   // Fund a project
-  function contribute() external theState(ProjectState.Fundraising) payable {
-    require(msg.sender != creator);
-    contributions[msg.sender] = contributions[msg.sender].add(msg.value);
-    currentBalance = currentBalance.add(msg.value);
-    emit ReceivedFunding(msg.sender, msg.value, currentBalance);
-    checkIfFundingCompleteOrExpired();
+  function contribute(uint256 amount) external theState(ProjectState.Fundraising) payable {
+    cUSDToken.transferFrom(msg.sender, address(this), amount);
+    
+    contributions[msg.sender] = contributions[msg.sender].add(amount);
+    currentBalance = currentBalance.add(amount);
+    emit ReceivedFunding(msg.sender, amount, currentBalance);
+    
+    checkIfFundingExpired();
   }
 
   // check project state
-  function checkIfFundingCompleteOrExpired() public {
-    if (currentBalance >= goalAmount) {
-      state = ProjectState.Successful; 
-      payOut(); 
-    } else if (block.timestamp > raisingDeadline) {
+  function checkIfFundingExpired() public {
+    if (block.timestamp > raisingDeadline) {
       state = ProjectState.Expired;
     }
-    completeAt = block.timestamp; 
   }
 
-  function payOut() internal theState(ProjectState.Successful) returns (bool) {
-    uint256 totalRaised = currentBalance; 
-    currentBalance = 0; 
-
-    if (creator.send(totalRaised)) {
+  function payOut() internal theState(ProjectState.Successful) returns (bool result) {
+    require(msg.sender == creator);
+    
+    uint256 totalRaised = currentBalance;
+    currentBalance =  0;
+    
+    if (cUSDToken.transfer(msg.sender, totalRaised)) {
       emit CreatorPaid(creator);
-      return true; 
-    } else { 
-      currentBalance = totalRaised; 
+      state = ProjectState.Successful;
+      return  true;
+    } 
+    else {
+      currentBalance = totalRaised;
       state = ProjectState.Successful;
     }
-
-    return false; 
+    
+    return  false;
   }
 
-  function getDetails() public view returns 
+  function getDetails() public  view  returns
   (
-    address payable projectCreator, 
+    address payable projectCreator,
     string memory projectTitle,
     string memory projectDescription,
-    string memory projectImageLink, 
+    string memory projectImageLink,
     uint fundRaisingDeadline,
     ProjectState currentState, 
-    uint256 projectGoalAmount,
+    uint256 projectGoalAmount, 
     uint256 currentAmount
   ) {
-    projectCreator = creator; 
+    projectCreator = creator;
     projectTitle = title;
     projectDescription = description;
-    projectImageLink = imageLink; 
+    projectImageLink = imageLink;
     fundRaisingDeadline = raisingDeadline;
-    currentState = state; 
-    projectGoalAmount = goalAmount; 
-    currentAmount = currentBalance; 
+    currentState = state;
+    projectGoalAmount = goalAmount;
+    currentAmount = currentBalance;
   }
+
 }
