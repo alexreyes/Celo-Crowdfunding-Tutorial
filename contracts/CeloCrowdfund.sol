@@ -129,7 +129,7 @@ contract Project {
     }
   }
 
-  function payOut() internal theState(ProjectState.Successful) returns (bool result) {
+  function payOut() external returns (bool result) {
     require(msg.sender == creator);
     
     uint256 totalRaised = currentBalance;
