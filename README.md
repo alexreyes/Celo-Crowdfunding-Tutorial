@@ -23,7 +23,7 @@ Before you continue, make sure you have truffle installed. If you don't, run the
 
 # Project setup 
 
-First, open the terminal and make a new project folder. We’ll call if celo-crowdfunding:
+First, open the terminal and make a new project folder. We’ll call it celo-crowdfunding:
 
 `mkdir celo-crowdfunding && cd celo-crowdfunding`
 
