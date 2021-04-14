@@ -1,7 +1,5 @@
 # 1. Building a Crowdfunding Smart Contract in Celo  
 
-[![Building a Crowdfunding Smart Contract in Celo](http://img.youtube.com/vi/uOso0av9gj4/0.jpg)](https://www.youtube.com/watch?v=uOso0av9gj4 "Building a Crowdfunding Smart Contract in Celo")  
-
 We're going to write a smart contract in Solidity which facilitates crowdfunding (like GoFundMe, Kickstarter, and Indiegogo) on Celo in 172 lines of code. 
 
 Our contract will be able to create fundraisers, let people donate to them, and pay out the money raised to the project creator. And it will do this all in cUSD (the Celo stablecoin).
@@ -13,6 +11,9 @@ The usual way of doing this might involve Plaid (banking), Stripe (payments), a 
 Solidity and Celo make building the backend for this easy! Not to mention, 🌎 from day one.
 
 This three part tutorial series will take you through writing the smart contract, deploying it, and interacting with it using Javascript.
+
+# Video: 
+[![Building a Crowdfunding Smart Contract in Celo](http://img.youtube.com/vi/uOso0av9gj4/0.jpg)](https://www.youtube.com/watch?v=uOso0av9gj4 "Building a Crowdfunding Smart Contract in Celo")  
 
 # Prerequisites
 
