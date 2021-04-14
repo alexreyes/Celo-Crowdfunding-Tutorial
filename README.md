@@ -1,4 +1,6 @@
-# 1. Building a Crowdfunding Smart Contract in Celo
+# 1. Building a Crowdfunding Smart Contract in Celo  
+
+[![Building a Crowdfunding Smart Contract in Celo](http://img.youtube.com/vi/uOso0av9gj4/0.jpg)](https://www.youtube.com/watch?v=uOso0av9gj4 "Building a Crowdfunding Smart Contract in Celo")  
 
 We're going to write a smart contract in Solidity which facilitates crowdfunding (like GoFundMe, Kickstarter, and Indiegogo) on Celo in 172 lines of code. 
 
@@ -35,7 +37,7 @@ After it’s been initialized, we’ll need to install some additional packages 
 * ContractKit is a package created by the Celo team to aid in Celo development
 * Dotenv is used for reading environment variables in our code
 * Web3 is a library which facilitates our interactions with the blockchain
-* OpenZeppelin contracts is a library of battle-tested solidity code  snippets we will reuse
+* OpenZeppelin contracts is a library of battle-tested solidity code snippets we will reuse
 
 Install all of the above using:
 
