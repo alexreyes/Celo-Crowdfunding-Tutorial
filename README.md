@@ -39,7 +39,8 @@ Before we continue, make sure you have truffle installed. If you don't, run the 
 
 `npm install -g truffle@5.3.12`
 
-**Note:** This tutorial uses Node v14.16.1
+**Note:** This tutorial uses Node v14.16.1 and Web3.js v1.3.6
+
 
 ## Project setup 
 
