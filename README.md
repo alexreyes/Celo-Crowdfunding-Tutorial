@@ -37,8 +37,9 @@ This tutorial is meant for intermediate web3 developers. It assumes you have som
 
 Before we continue, make sure you have truffle installed. If you don't, run the following line of code in your terminal: 
 
-`npm install -g truffle`
+`npm install -g truffle@5.3.12`
 
+**Note:** This tutorial uses Node v14.16.1
 
 ## Project setup 
 
